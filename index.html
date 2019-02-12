@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    
+    </head>
+    <body>
+        <!--<input type="text" oninput="waitFunction()"> -->
+        <br></br>
+        <input id = "text" type="text" oninput="getText()">
+        <!--<input type="text" id='text' oninput="countChars() ," oninput="statusUpdate()">-->
+        <p id = "total"> Total Characters: 0</p>
+        <p id = "status"> Status: Please Swipe Card</p>
+        <div id="txtCardReader">
+        </div>
+    </body>
+   
+   <script>
+   
+    
+    var waitVar;
+        
+        function getText(){
+            var textInput = document.getElementById('text').value;
+            textInput = textInput.replace(/\s/g, '');
+            count(textInput);
+            var front = textInput.toString().substring(0, 2); //obtains the beginning characters of the input (ex. %B)
+            
+            
+        }
+        function count(textInput){
+            var total = textInput;
+            total = total.replace(/\s/g, '');
+            document.getElementById("total").innerHTML="Total Characters: " + (total.length);
+            
+            statusUpdate(total.length) //TODO second param for boolean value
+
+        }
+            
+        function statusUpdate(len){ //Param is the number of characters in the input field
+    
+            var maxLength = 79; //Total amount of characters for a successful card swipe
+
+
+                if (len == 0){ 
+                    document.getElementById("status").innerHTML="Status: " + "Please Swipe Card";
+                }
+                if (len == maxLength){
+                    document.getElementById("status").innerHTML="Status: " + "Success"; //Card was read properly
+                }
+                else{
+                    document.getElementById("status").innerHTML="Status: " + "Error, please swipe again"; //Card did NOT read properly
+                }
+
+        }
+
+        function waitFunction(){
+            waitVar = setTimeout(cardDetect(), 100000);
+        }
+
+        function cardDetect(){
+            
+            alert("Card has been swiped");
+        }
+    </script>
+
+
+</html>
