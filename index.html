@@ -4,27 +4,33 @@
     
     </head>
     <body>
-        <!--<input type="text" oninput="waitFunction()"> -->
+        
         <br></br>
         <input id = "text" type="text" oninput="getText()">
-        <!--<input type="text" id='text' oninput="countChars() ," oninput="statusUpdate()">-->
+       
         <p id = "total"> Total Characters: 0</p>
         <p id = "status"> Status: Please Swipe Card</p>
-        <div id="txtCardReader">
-        </div>
+        <p id = "uin">UIN: </p>
+        <p id="prefix">Prefix: </p>
+        <button id = "resetButton" onclick="resetFields()" >Reset</button> 
     </body>
    
    <script>
    
-    
-    var waitVar;
         
+        /* Resets all the fields when reset button is pressed */
+        function resetFields(){
+            document.getElementById("text").value = "";
+            document.getElementById("total").innerHTML = "Total Characters: 0";
+            document.getElementById("status").innerHTML = "Status: Please Swipe Card";
+            document.getElementById("uin").innerHTML = "UIN: ";
+            document.getElementById("prefix").innerHTML = "Prefix: ";
+        }
+
         function getText(){
             var textInput = document.getElementById('text').value;
-            textInput = textInput.replace(/\s/g, '');
+            textInput = textInput.replace(/\s/g, ''); 
             count(textInput);
-            var front = textInput.toString().substring(0, 2); //obtains the beginning characters of the input (ex. %B)
-            
             
         }
         function count(textInput){
@@ -32,35 +38,37 @@
             total = total.replace(/\s/g, '');
             document.getElementById("total").innerHTML="Total Characters: " + (total.length);
             
-            statusUpdate(total.length) //TODO second param for boolean value
+            statusUpdate(total.length , total); 
 
         }
             
-        function statusUpdate(len){ //Param is the number of characters in the input field
+        function statusUpdate(len , text){ //Param is the number of characters in the input field
     
             var maxLength = 79; //Total amount of characters for a successful card swipe
+            var prefix = text.toString().substring(0, 2); //obtains the prefix characters of the input (ex. %B)  
 
+            document.getElementById("prefix").innerHTML= "Prefix: " + prefix;
 
                 if (len == 0){ 
                     document.getElementById("status").innerHTML="Status: " + "Please Swipe Card";
                 }
-                if (len == maxLength){
+                if (len == maxLength && prefix == "%B"){
                     document.getElementById("status").innerHTML="Status: " + "Success"; //Card was read properly
+                    getUIN(text); //Calls the function getUIN() to obtain the UIN substring
                 }
                 else{
                     document.getElementById("status").innerHTML="Status: " + "Error, please swipe again"; //Card did NOT read properly
+                
                 }
+        }
+
+        function getUIN(text){
+            var uin = text.substring(54, 63); //Obtains the string of the UIN
+            document.getElementById("uin").innerHTML="UIN: " + uin;
 
         }
 
-        function waitFunction(){
-            waitVar = setTimeout(cardDetect(), 100000);
-        }
 
-        function cardDetect(){
-            
-            alert("Card has been swiped");
-        }
     </script>
 
 
