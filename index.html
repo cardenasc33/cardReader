@@ -13,6 +13,8 @@
         <p id = "uin">UIN: </p>
         <p id="prefix">Prefix: </p>
         <button id = "resetButton" onclick="resetFields()" >Reset</button> 
+
+        <div id = "userInfo">User Info: </div>
     </body>
    
    <script>
@@ -62,10 +64,28 @@
                 }
         }
 
+        function loadDoc(){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("userInfo").innerHTML = "User Info: " + this.responseText;
+                }
+            };
+            xhttp.open("GET", "test1.json", true);
+            xhttp.send();
+        }
+
+        /* called if UIN is obtainable 
+         * searches UIN in the database,
+         * displays info for matching UIN
+         * 
+         */ 
         function getUIN(text){
             var uin = text.substring(54, 63); //Obtains the string of the UIN
             document.getElementById("uin").innerHTML="UIN: " + uin;
 
+            //AJAX call , searches UIN, pull info 
+            loadDoc(); //loads data from json file
         }
 
 
