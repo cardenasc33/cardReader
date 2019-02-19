@@ -10,11 +10,11 @@
        
         <p id = "total"> Total Characters: 0</p>
         <p id = "status"> Status: Please Swipe Card</p>
-        <p id = "uin">UIN: </p>
+        <p id = "uinID">UIN: </p>
         <p id="prefix">Prefix: </p>
         <button id = "resetButton" onclick="resetFields()" >Reset</button> 
-
-        <div id = "userInfo">User Info: </div>
+        <br></br>
+        <div id = "userInfo" ><u>User Info: </u></div>
     </body>
    
    <script>
@@ -25,8 +25,9 @@
             document.getElementById("text").value = "";
             document.getElementById("total").innerHTML = "Total Characters: 0";
             document.getElementById("status").innerHTML = "Status: Please Swipe Card";
-            document.getElementById("uin").innerHTML = "UIN: ";
+            document.getElementById("uinID").innerHTML = "UIN: ";
             document.getElementById("prefix").innerHTML = "Prefix: ";
+            document.getElementById("userInfo").innerHTML = "<u>User Info: </u>";
         }
 
         function getText(){
@@ -64,29 +65,56 @@
                 }
         }
 
-        function loadDoc(){
+        /* called if UIN is obtainable 
+         * searches UIN in the database,
+         * displays info for matching UIN
+         * 
+         */ 
+         function getUIN(text){
+            var uin = text.substring(54, 63); //Obtains the string of the UIN
+            document.getElementById("uinID").innerHTML="UIN: " + uin;
+
+            //AJAX call , searches UIN, pull info 
+            loadDoc(uin); //loads data from json file
+        }
+
+        /*
+         * Opens the JSON file and does a 
+         * search to find a match to the passed UIN.
+         * Displays appropriate information based on 
+         * search results
+         */
+        function loadDoc(uinNum){
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("userInfo").innerHTML = "User Info: " + this.responseText;
+                    //TODO Parse JSON
+                    var json = JSON.parse(this.responseText);
+                    
+                    var i;
+
+                    /* Searches the JSON file for matching UIN number */
+                    for (i = 0; i < json.length; i++){
+
+                        /* When match is found, display information about the user associated to the UIN */
+                        if (json[i].uin == uinNum){ 
+                            document.getElementById("userInfo").innerHTML = "<u>User Info: </u>"; 
+                            document.getElementById("userInfo").innerHTML += "<br>Name: " + json[i].studentInfo["firstName"]  + " " + json[i].studentInfo["middleName"] + " " + json[i].studentInfo["lastName"];
+                            document.getElementById("userInfo").innerHTML += "<br>UIN: " + json[i].uin;
+                        }
+                        else{
+                            document.getElementById("userInfo").innerHTML = "<u>User Info: </u>" + "** User Not Found **";
+                        }
+                        
+
+                    }
+    
                 }
             };
             xhttp.open("GET", "test1.json", true);
             xhttp.send();
         }
 
-        /* called if UIN is obtainable 
-         * searches UIN in the database,
-         * displays info for matching UIN
-         * 
-         */ 
-        function getUIN(text){
-            var uin = text.substring(54, 63); //Obtains the string of the UIN
-            document.getElementById("uin").innerHTML="UIN: " + uin;
-
-            //AJAX call , searches UIN, pull info 
-            loadDoc(); //loads data from json file
-        }
 
 
     </script>

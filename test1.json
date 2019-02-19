@@ -1,7 +1,20 @@
+[
 {
-   
-    "firstName": "Christian",
-    "middleName": "Aspilla",
-    "lastName": "Cardenas",
-    "uin": "670168228"
-}
+    "uin": "670168300",
+    "studentInfo": {
+         "firstName": "Jonathan",
+         "middleName": "Samson",
+         "lastName": "Rowe",
+         "rsvpStatus": "YES"
+    }
+ },
+ {
+    "uin": "670168228",
+    "studentInfo": {
+         "firstName": "Christian",
+         "middleName": "Aspilla",
+         "lastName": "Cardenas",
+         "rsvpStatus": "NO"
+    }
+ }
+]
