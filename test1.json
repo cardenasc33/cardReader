@@ -5,7 +5,7 @@
          "firstName": "Jonathan",
          "middleName": "Samson",
          "lastName": "Rowe",
-         "rsvpStatus": "YES"
+         "rsvpStatus": "Yes"
     }
  },
  {
@@ -14,7 +14,7 @@
          "firstName": "Christian",
          "middleName": "Aspilla",
          "lastName": "Cardenas",
-         "rsvpStatus": "NO"
+         "rsvpStatus": "No"
     }
  }
 ]
