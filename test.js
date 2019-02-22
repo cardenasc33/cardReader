@@ -17,3 +17,8 @@ var fs = require("fs");
        if(err) console.log('error', err); //Print out error if not successful
      });
    });
+
+   //TODO provide checkin field and manual type in for UIN if card swipe does not work
+
+   //Google form -> csv -> JSON -> cardswipe program
+

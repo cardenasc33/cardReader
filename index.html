@@ -15,6 +15,17 @@
         <button id = "resetButton" onclick="resetFields()" >Reset</button> 
         <br></br>
         <div id = "userInfo" ><u>User Info: </u></div>
+
+        <!-- Manual Entery and Upload of User Data -->
+        
+        <p>Manually enter UIN if card swipe not applicable:</p>
+        <form action="/action_page.php">
+            UIN:<br>
+            <input type="text" name="uinInput" value="" required minLength="9" maxLength="9">
+            <br>
+            <input type="submit" id = "uploadBtn" value="Upload" required>
+          </form> 
+
     </body>
    
    <script>
@@ -93,30 +104,6 @@
                     
                     var i;
                     
-
-                    /*
-                    //TODO Write to JSON file
-                    
-                    var fs = require("fs");
-                    var sampleObject = {
-                            a: 1,
-                            b: 2,
-                            c: {
-                            x: 11,
-                            y: 22
-                        }
-                    };
-
-                
-                    fs.writeFile("./test1.json", JSON.stringify(sampleObject, null, 4), (err) => {
-                        if (err) {
-                            console.error(err);
-                            return;
-                        };
-                        console.log("File has been created");
-                    });
-                    */
-
                     /* Searches the JSON file for matching UIN number */
                     for (i = 0; i < json.length; i++){
 
@@ -126,6 +113,7 @@
                             document.getElementById("userInfo").innerHTML += "<br>Name: " + json[i].studentInfo["firstName"]  + " " + json[i].studentInfo["middleName"] + " " + json[i].studentInfo["lastName"];
                             document.getElementById("userInfo").innerHTML += "<br>UIN: " + json[i].uin;
                             document.getElementById("userInfo").innerHTML += "<br>RSVP: " + json[i].studentInfo["rsvpStatus"];
+                            break; //Match is found, stop search
                         }
                         else{
                             document.getElementById("userInfo").innerHTML = "<u>User Info: </u>" + "** User Not Found **";
