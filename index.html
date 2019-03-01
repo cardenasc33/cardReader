@@ -29,6 +29,14 @@
 
         <div id = "userInfo" ><u>User Info: </u></div>
 
+        <!-- Upload CSV button and Download JSON file button-->
+        <p>Select local CSV File:</p>
+         <input id="csv" type="file">
+         <output id="out"> input file content</output>
+        <a id="myButton" href="#">Download JSON</button>
+
+
+
     </body>
     <script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js"></script>
     
@@ -170,6 +178,96 @@
             xhttp.open("GET", "test1.json", true);  //opens and gets the contents from json file
             xhttp.send();
         }
+
+        /**********************************************/
+        //TODO upload and download functionality
+
+        function convertToJson(inputCsv) { //inputCsv passed from readfile function
+        /* Split input string by `,` and clean up each item */
+        //const arrayCsv = inputCsv.split(',').map(s => s.replace(/"/gi, '').trim())
+        var lines = inputCsv.split('\n');
+        lines.splice(0,1);
+
+        var arrayCsv = [];
+        for (var line = 0; line < lines.length; line++){
+            const lineArray = lines[line].split(',').map(s => s.replace(/"/gi, '').trim());
+            lineArray.splice(0,1);
+
+            arrayCsv[line] = lineArray;
+        }
+        
+
+        const outputJson = [];
+
+        console.log(arrayCsv);
+        var n = arrayCsv.length;
+
+        /* Iterate through input csv at increments of 6, to capture entire CSV row 
+           per iteration */
+        for (var m = 0; m < arrayCsv.length; m++){
+                for (let i = 0; i < arrayCsv[m].length; i += 6) {
+                /* Extract CSV data for current row, and assign to named variables */
+                const [date, firstName, middleName, lastName, uin, rsvpStatus] =
+                arrayCsv.slice(i, i + 6);
+                
+
+                /* Populate structured JSON entry for this CSV row */
+                
+                outputJson.push({
+                        uin: {},
+                        studentInfo: {
+                        firstName,
+                        middleName,
+                        lastName,
+                        rsvpStatus
+                        }
+                });
+                
+                } //end of for loop
+               
+        }
+      
+        console.log(outputJson);
+        return outputJson;
+    }
+     
+    
+      var jsonString; //1.
+      var fileInput = document.getElementById("csv"),
+        readFile = function() {
+          var reader = new FileReader();
+          reader.onload = function() {
+            const result = convertToJson(reader.result)
+            document.getElementById('out').innerHTML = JSON.stringify(result);
+            
+            jsonString = JSON.stringify(result, null, 4); //2.
+
+            //pass to the download function 
+            download(jsonString); 
+        
+          };
+          // start reading the file. When it is done, calls the onload event defined above.
+          reader.readAsBinaryString(fileInput.files[0]);
+        };
+      fileInput.addEventListener('change', readFile);
+
+        
+        console.log(jsonString); //3.
+
+      // download json file
+      function download(JSONstring){
+            document.getElementById('myButton').onclick = function(event){
+                var json = JSONstring;
+                blob = new Blob([json], {type: "octet/stream"});
+                url = window.URL.createObjectURL(blob);
+                this.href = url;
+                this.target = '_blank';
+                this.download = 'newCopy.json';
+            }
+      }
+      
+
+
 
         //TODO automate updating of json file
         
