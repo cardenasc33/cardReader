@@ -5,8 +5,8 @@
            "firstName": "JURAT",
            "middleName": "",
            "lastName": "SHAYIDING",
-           "rsvpStatus": "No",
-           "checkin": "No"
+           "rsvpStatus": "false",
+           "checkin": "true"
       }
     },
     {
@@ -15,8 +15,8 @@
              "firstName": "Jonathan",
              "middleName": "Samson",
              "lastName": "Rowe",
-             "rsvpStatus": "Yes",
-             "checkin": "Yes"
+             "rsvpStatus": "true",
+             "checkin": "true"
         }
      },
      {
@@ -25,8 +25,9 @@
              "firstName": "Christian",
              "middleName": "Aspilla",
              "lastName": "Cardenas",
-             "rsvpStatus": "No",
-             "checkin": "No"
+             "rsvpStatus": "false",
+             "checkin": "false"
         }
      }
 ]
+

@@ -33,7 +33,7 @@
         <p>Select local CSV File:</p>
          <input id="csv" type="file">
          <output id="out"> input file content</output>
-        <a id="myButton" href="#">Download JSON</button>
+        <a id="myButton" href="#">Download CSV</button>
 
 
 
@@ -205,29 +205,30 @@
         /* Iterate through input csv at increments of 6, to capture entire CSV row 
            per iteration */
         for (var m = 0; m < arrayCsv.length; m++){
-                for (let i = 0; i < arrayCsv[m].length; i += 6) {
+                
+                var uin = arrayCsv[m][3]; //Obtains uin from the csv file line
+                
+                for (var i = 0; i < arrayCsv[m].length; i+=3) {
+              
                 /* Extract CSV data for current row, and assign to named variables */
-                const [date, firstName, middleName, lastName, uin, rsvpStatus] =
-                arrayCsv.slice(i, i + 6);
-                
 
+                var [firstName, middleName, lastName] =
+                arrayCsv[m].slice(i, i + 3);
                 /* Populate structured JSON entry for this CSV row */
-                
-                outputJson.push({
-                        uin: {},
-                        studentInfo: {
-                        firstName,
-                        middleName,
-                        lastName,
-                        rsvpStatus
-                        }
-                });
-                
-                } //end of for loop
                
+                outputJson.push({
+                            uin: uin,
+                            studentInfo: {
+                                firstName,
+                                middleName,
+                                lastName,
+                                rsvpStatus: "true",
+                                checkin: "false"
+                            } 
+                });
+                break;
+                } //end of for loop
         }
-      
-        console.log(outputJson);
         return outputJson;
     }
      
@@ -243,7 +244,7 @@
             jsonString = JSON.stringify(result, null, 4); //2.
 
             //pass to the download function 
-            download(jsonString); 
+            downloadCSV(jsonString); 
         
           };
           // start reading the file. When it is done, calls the onload event defined above.
@@ -254,7 +255,7 @@
         
         console.log(jsonString); //3.
 
-      // download json file
+      // Convert JSON to csv and then download
       function download(JSONstring){
             document.getElementById('myButton').onclick = function(event){
                 var json = JSONstring;
@@ -264,6 +265,53 @@
                 this.target = '_blank';
                 this.download = 'newCopy.json';
             }
+      }
+
+      function ConvertToCSV(objArray) {
+            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            var str = '';
+
+            for (var i = 0; i < array.length; i++) {
+                var line = '';
+                for (var index in array[i]) {
+                    if (line != '') line += ','
+
+                    line += array[i][index];
+                }
+
+                str += line + '\r\n';
+            }
+
+            return str;
+        }
+
+      function downloadCSV(JSONstring){
+          document.getElementById('myButton').onclick = function(event){
+              var json = JSON.parse(JSONstring);
+              
+              /*
+              var fields = Object.keys(json[0]);
+              var replacer = function(key, value){
+                  return value === null ? '' : value
+              }
+              var csv = json.map(function(row){
+                  return fields.map(function(fieldName){
+                      return JSON.stringify(row[fieldName], replacer)
+                  }).join(',')
+              })
+              csv.unshift(fields.join(',')) //add header column
+              var csvContent = csv.join('\r\n');
+              */
+
+              var csvContent = ConvertToCSV(json);
+
+              blob = new Blob([csvContent], {type: "octet/stream"});
+                url = window.URL.createObjectURL(blob);
+                this.href = url;
+                this.target = '_blank';
+                this.download = 'newCopy.csv';
+            
+        }
       }
       
 
