@@ -108,7 +108,6 @@
                 }
                 else{
                     document.getElementById("status").innerHTML="Status: " + "Error, please swipe again"; //Card did NOT read properly
-                
                 }
         }
 
@@ -271,17 +270,25 @@
             var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
             var str = '';
 
+            console.log(array);
+            console.log(objArray);
             for (var i = 0; i < array.length; i++) {
                 var line = '';
                 for (var index in array[i]) {
                     if (line != '') line += ','
-
                     line += array[i][index];
+                    if (i == 1){
+                        //Now enter student data
+                        var line = '';
+                        console.log("key value" , array[i][index]);
+                        var studentInfo = array[i][index];
+                    
+                    }
                 }
 
                 str += line + '\r\n';
             }
-
+            console.log(str);
             return str;
         }
 
@@ -302,8 +309,8 @@
               csv.unshift(fields.join(',')) //add header column
               var csvContent = csv.join('\r\n');
               */
-
-              var csvContent = ConvertToCSV(json);
+              
+            var csvContent = ConvertToCSV(json);
 
               blob = new Blob([csvContent], {type: "octet/stream"});
                 url = window.URL.createObjectURL(blob);
