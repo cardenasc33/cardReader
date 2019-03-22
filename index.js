@@ -65,18 +65,30 @@ app.get("/person/:id", (request, response) => {
     });
 });
 
+//TODO: collection -> students 
+app.post("/students", (request, response) => {
+    collection.insert(request.body, (error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result.result);
+    });
+});
+
+
+//Check url
+/*
+curl -X POST \
+    -H 'content-type:application/json' \
+    -d '{"firstname":"Marko","lastname":"Simmons"}' \
+    http://localhost:3000/student
+*/
 
 
 
-
-
-
-
-
-
-
-
-
+/* API Route Links:
+http://localhost:3000/people
+*/
 
 
 
