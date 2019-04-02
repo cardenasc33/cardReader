@@ -123,11 +123,12 @@ app.get("/getNonDups", (request, response) => {
         var json = JSON.parse(data);
         console.log(json);
         
-        validateUIN(670168228).then(function(valid){
+        validateUIN("670168228").then(function(valid){
+            console.log("is it valid? " + valid);
             if(valid){
-                console.log("UIN is valid");
+                console.log("UIN is not in the database");
             }else{
-                console.log("UIN is already exists");
+                console.log("UIN already exists");
             }
         });
         response.send(json);
@@ -137,12 +138,27 @@ app.get("/getNonDups", (request, response) => {
 
 
 /* Check already existing UINs in the database */
-function validateUIN(uin){
-    return studentCollection.findOne({uin:uin}).then(function(result){
+function validateUIN(UIN){
+
+    return studentCollection.findOne({uin: UIN}).then(function(result){
+        console.log(UIN);
         console.log(result);
-        return result != null;
+        return result == null;
     });
+    
 }
+
+app.get("/person/:id", (request, response) => {
+    collection.findOne({ "_id": new ObjectId(request.params.id) }, (error, result) => {
+        if (error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
+    });
+});
+
+
+
 
 //Check url
 /*
