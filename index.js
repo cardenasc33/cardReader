@@ -20,6 +20,7 @@ app.listen(3000, () => {
         }
         database = client.db(DATABASE_NAME);
         collection = database.collection("people");
+        studentCollection = database.collection("students");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
 });
@@ -65,9 +66,9 @@ app.get("/person/:id", (request, response) => {
     });
 });
 
-//TODO: collection -> students 
-app.post("/students", (request, response) => {
-    collection.insert(request.body, (error, result) => {
+//Adds a student to the server
+app.post("/student", (request, response) => {
+    studentCollection.insert(request.body, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
@@ -75,6 +76,73 @@ app.post("/students", (request, response) => {
     });
 });
 
+//Gets all the students from the database
+app.get("/students", (request, response) => {
+    studentCollection.find({}).toArray((error, result) => {
+        if(error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
+    });
+});
+
+//Upload JSON data to database
+app.post("/upload", (request, response) => {
+    var fs = require('fs');
+    fs.readFile('test1.json', 'utf8', function(err, data) {
+        console.log(data);
+        var json = JSON.parse(data);
+
+        studentCollection.insert(json, (error, result) => {
+            if(error) {
+                return response.status(500).send(error);
+            }
+            
+            response.send(result.result);
+        });
+    });
+});
+
+//Gets the JSON file
+app.get("/getJSON", (request, response) => {
+    var fs = require('fs');
+    fs.readFile('test1.json' , 'utf8', function(err, data) {
+        console.log(data);
+        var json = JSON.parse(data);
+        console.log(json);
+
+        response.send(json);
+    })
+});
+
+
+app.get("/getNonDups", (request, response) => {
+    var fs = require('fs');
+    fs.readFile('test1.json' , 'utf8', function(err, data) {
+        console.log(data);
+        var json = JSON.parse(data);
+        console.log(json);
+        
+        validateUIN(670168228).then(function(valid){
+            if(valid){
+                console.log("UIN is valid");
+            }else{
+                console.log("UIN is already exists");
+            }
+        });
+        response.send(json);
+    });
+});
+
+
+
+/* Check already existing UINs in the database */
+function validateUIN(uin){
+    return studentCollection.findOne({uin:uin}).then(function(result){
+        console.log(result);
+        return result != null;
+    });
+}
 
 //Check url
 /*
