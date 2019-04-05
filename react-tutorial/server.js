@@ -13,7 +13,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 
 var database, collection;
 
-app.listen(3000, () => {
+app.listen(3001, () => {
     MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
         if(error) {
             throw error;
@@ -165,7 +165,16 @@ app.get("/person/:id", (request, response) => {
 });
 
 
+app.get('/hello', (req, res) => {
+    res.send({ express: 'Hello From Express' });
+  });
 
+  app.post('/send', (req, res) => {
+    console.log(req.body);
+    res.send(
+      `I received your POST request. This is what you sent me: ${req.body.post}`,
+    );
+  });
 
 //Check url
 /*
