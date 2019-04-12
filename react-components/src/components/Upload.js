@@ -18,7 +18,7 @@ class Upload extends Component {
     this.sendRequest = this.sendRequest.bind(this);
     this.renderActions = this.renderActions.bind(this);
   }
-
+  // status update
   onFilesAdded(files) {
     this.setState(prevState => ({
       files: prevState.files.concat(files)
@@ -36,11 +36,9 @@ class Upload extends Component {
 
       this.setState({ successfullUploaded: true, uploading: false });
     } catch (e) {
-      // Not Production ready! Do some error handling here instead...
       this.setState({ successfullUploaded: true, uploading: false });
     }
   }
-
   sendRequest(file) {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
@@ -77,27 +75,6 @@ class Upload extends Component {
       req.send(formData);
     });
   }
-
-  renderProgress(file) {
-    const uploadProgress = this.state.uploadProgress[file.name];
-    if (this.state.uploading || this.state.successfullUploaded) {
-      return (
-        <div className="ProgressWrapper">
-          <Progress progress={uploadProgress ? uploadProgress.percentage : 0} />
-          <img
-            className="CheckIcon"
-            alt="done"
-            src="baseline-check_circle_outline-24px.svg"
-            style={{
-              opacity:
-                uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
-            }}
-          />
-        </div>
-      );
-    }
-  }
-
   renderActions() {
     if (this.state.successfullUploaded) {
       return (
@@ -148,5 +125,4 @@ class Upload extends Component {
     );
   }
 }
-
 export default Upload;
