@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import PostList from './PostList'
+import Button from './Button';
+import Upload from './Upload';
+import FileUpload from './FileUpload';
 
 
 class App extends Component {
@@ -36,7 +39,13 @@ state = {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         //Renders content from api calls
-        <PostList />
+     
+        
+        <FileUpload/>
+        
+        
+        
+        
         // Render the newly fetched data inside of this.state.data 
         <p className="App-intro">{this.state.data}</p>
 

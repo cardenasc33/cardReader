@@ -5,9 +5,11 @@ const ObjectId = require("mongodb").ObjectID;
 
 const CONNECTION_URL = "mongodb+srv://MongoDB:testpass222%21@cluster0-moa1z.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "testdb";
+const fileUpload = require("express-fileupload");
 
 var app = Express();
 
+app.use(fileUpload());
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 
@@ -90,6 +92,27 @@ app.get("/students", (request, response) => {
     });
 });
 
+//upload csv
+
+/*
+app.post('/upload', function(req, res) {
+    console.log(req.files.foo); // the uploaded file object
+    console.log(req.files.foo.name);
+    console.log(req.files.foo.data);
+});
+*/
+
+app.post('/upload', function(req, res) {
+    if (Object.keys(req.files).length == 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+  
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.sampleFile;
+    console.log(sampleFile.name);
+    console.log(sampleFile.data);
+  });
+/*
 //Upload JSON data to database
 app.post("/upload", (request, response) => {
     var fs = require('fs');
@@ -106,6 +129,8 @@ app.post("/upload", (request, response) => {
         });
     });
 });
+*/
+
 
 //Gets the JSON file
 app.get("/getJSON", (request, response) => {

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 
+
+
+
 class PostList extends Component {
+
+  
   state = {
     data: []
   }
@@ -25,9 +30,10 @@ callBackendAPI = async () => {
   return body;
 };
 
-  render() {
+
+  
+render() {
     
-        
     return (
         <div> 
           
@@ -40,5 +46,6 @@ callBackendAPI = async () => {
 
 
 }
+
 
 export default PostList;
