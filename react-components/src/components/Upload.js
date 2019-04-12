@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import Dropzone from "../dropzone/Dropzone";
 import "./Upload.css";
-import Progress from "../progress/Progress";
+import fs from 'fs';
+import ReactFileReader from 'react-file-reader';
+
+import React from 'react'
+import ReactDOM from 'react-dom'
+// import Progress from "../progress/Progress";
 
 class Upload extends Component {
   constructor(props) {
@@ -24,29 +29,37 @@ class Upload extends Component {
       files: prevState.files.concat(files)
     }));
   }
-
-  async uploadFiles() {
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({ response: res.express }))
+      .catch(err => console.log(err));
+  }
+  async uploadFiles(event) {
     this.setState({ uploadProgress: {}, uploading: true });
+    // let reader = new FileReader();
+    let files = event.target.files[0];
+    console.log(files)
+
     const promises = [];
-    this.state.files.forEach(file => {
-      promises.push(this.sendRequest(file));
-    });
+    promises.push(this.sendRequest(files))
     try {
       await Promise.all(promises);
-
       this.setState({ successfullUploaded: true, uploading: false });
     } catch (e) {
       this.setState({ successfullUploaded: true, uploading: false });
     }
   }
-  sendRequest(file) {
+  // read file in reactjs
+
+  // fetch api
+  sendRequest(files) {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
 
       req.upload.addEventListener("progress", event => {
         if (event.lengthComputable) {
           const copy = { ...this.state.uploadProgress };
-          copy[file.name] = {
+          copy[files.name] = {
             state: "pending",
             percentage: (event.loaded / event.total) * 100
           };
@@ -63,15 +76,14 @@ class Upload extends Component {
 
       req.upload.addEventListener("error", event => {
         const copy = { ...this.state.uploadProgress };
-        copy[file.name] = { state: "error", percentage: 0 };
+        copy[files.name] = { state: "error", percentage: 0 };
         this.setState({ uploadProgress: copy });
         reject(req.response);
       });
-
       const formData = new FormData();
-      formData.append("file", file, file.name);
+      formData.append("file", files, files.name);
 
-      req.open("POST", "http://localhost:8000/upload");  // default server
+      req.open("POST", "http://localhost:3000/upload");  // default server
       req.send(formData);
     });
   }
@@ -97,7 +109,6 @@ class Upload extends Component {
       );
     }
   }
-
   render() {
     return (
       <div className="Upload">
@@ -110,11 +121,11 @@ class Upload extends Component {
             />
           </div>
           <div className="Files">
-            {this.state.files.map(file => {
+            {this.state.files.map(files => {
               return (
-                <div key={file.name} className="Row">
-                  <span className="Filename">{file.name}</span>
-                  {this.renderProgress(file)}
+                <div key={files.name} className="Row">
+                  <span className="Filename">{files.name}</span>
+                  {this.renderProgress(files)}
                 </div>
               );
             })}

@@ -23,8 +23,7 @@ export class checkinForm extends React.Component {
   };
   onSubmit(e) {
     e.preventDefault();
-    const response = await fetch('/send', {
-
+    const response = await fetch('/people', {
       body: JSON.stringify(this.state),
       cache: 'no-cache',
       credentials: 'same-origin',
