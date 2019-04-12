@@ -36,14 +36,14 @@ export class checkinForm extends React.Component {
       redirect: 'follow',
       referrer: 'no-referrer',
     }
-      .then(function (response) {
-        console.log(response);
-        if (response.status === 200) {
-          alert('match found');
-        } else {
-          alert('not found');
-        }
-      });
+    .then(function (response) {
+      console.log(response);
+      if (response.status === 200) {
+        alert('match found');
+      } else {
+        alert('not found');
+      }
+    });
   }
   render() {
     return (
