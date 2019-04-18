@@ -1,7 +1,15 @@
+
+
 const Express = require("express");
 const BodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
+
+var multer = require("multer");
+var fs = require("fs");
+var axios = require("axios");
+
+
 
 const CONNECTION_URL = "mongodb+srv://MongoDB:testpass222%21@cluster0-moa1z.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "testdb";
@@ -21,7 +29,7 @@ app.listen(3005, () => {
             throw error;
         }
         database = client.db(DATABASE_NAME);
-        collection = database.collection("people");
+        collection = database.collection("people"); //table
         studentCollection = database.collection("students");
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
@@ -94,14 +102,58 @@ app.get("/students", (request, response) => {
 
 //upload csv
 
-/*
-app.post('/upload', function(req, res) {
-    console.log(req.files.foo); // the uploaded file object
-    console.log(req.files.foo.name);
-    console.log(req.files.foo.data);
+
+// configuring Multer to use files directory for storing files
+// this is important because later we'll need to access file path
+const storage = multer.diskStorage({
+    destination: './files',
+    filename(req, file, cb) {
+      cb(null, `${new Date()}-${file.originalname}`);
+    },
+  });
+  
+// express route where we receive files from the client
+// passing multer middleware
+const upload = multer({ storage });
+
+// express route where we receive files from the client
+// passing multer middleware
+app.post('/upload', upload.single('file'), (req, res) => {
+ const file = req.file; // file passed from client
+ const meta = req.body; // all other values passed from the client, like name, etc..
+ 
+ // send the data to our REST API
+ axios({
+    url: `https://api.myrest.com/uploads`,
+    method: 'post',
+    data: {
+      file,
+      name: meta.name,      
+    },
+  })
+   .then(response => res.status(200).json(response.data.data))
+   .catch((error) => res.status(500).json(error.response.data));
 });
+
+/*
+//Uploading with node fs
+    app.post('/upload' , function(req, res, next) {
+            fs.readFile(req.files.path, function(err, data) {
+                if(err) throw err;
+                //data will contain your file contents
+                console.log(data);
+
+                // delete file
+                fs.unlink(req.files.path, function(err) {
+                    if (err) throw err;
+                    console.log("successfully deleted " + req.files.path);
+                });
+            })
+    });
 */
 
+
+/*  Uploading with express upload file
 app.post('/upload', function(req, res) {
     if (Object.keys(req.files).length == 0) {
       return res.status(400).send('No files were uploaded.');
@@ -111,7 +163,12 @@ app.post('/upload', function(req, res) {
     let sampleFile = req.files.sampleFile;
     console.log(sampleFile.name);
     console.log(sampleFile.data);
+
+    var jsonObj = JSON.parse(sampleFile.data.toString('ascii'));
   });
+
+*/  
+
 /*
 //Upload JSON data to database
 app.post("/upload", (request, response) => {
