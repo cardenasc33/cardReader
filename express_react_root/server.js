@@ -8,7 +8,10 @@ const ObjectId = require("mongodb").ObjectID;
 var multer = require("multer");
 var fs = require("fs");
 var axios = require("axios");
+var csv = require('fast-csv');
 
+var router = express.Router();
+var upload = multer({dest: '/tmp/csv/'});
 
 
 const CONNECTION_URL = "mongodb+srv://MongoDB:testpass222%21@cluster0-moa1z.mongodb.net/test?retryWrites=true";
@@ -103,6 +106,7 @@ app.get("/students", (request, response) => {
 //upload csv
 
 
+/*
 // configuring Multer to use files directory for storing files
 // this is important because later we'll need to access file path
 const storage = multer.diskStorage({
@@ -134,6 +138,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
    .then(response => res.status(200).json(response.data.data))
    .catch((error) => res.status(500).json(error.response.data));
 });
+*/
 
 /*
 //Uploading with node fs
@@ -152,8 +157,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
     });
 */
 
-
-/*  Uploading with express upload file
+/*
+//Uploading with express uploadfile
 app.post('/upload', function(req, res) {
     if (Object.keys(req.files).length == 0) {
       return res.status(400).send('No files were uploaded.');
@@ -166,10 +171,54 @@ app.post('/upload', function(req, res) {
 
     var jsonObj = JSON.parse(sampleFile.data.toString('ascii'));
   });
-
-*/  
+*/
 
 /*
+app.post('/upload', function(req, res) {
+
+    fs.readFile(req.files.data, function (err, data) {
+
+        var imageName = req.files.image.name
+
+        /// If there's an error
+        if(!imageName){
+
+            console.log("There was an error")
+            res.redirect("/");
+            res.end();
+
+        } else {
+
+          var newPath = __dirname + "/uploads/fullsize/" + imageName;
+
+          /// write file to uploads/fullsize folder
+          fs.writeFile(newPath, data, function (err) {
+
+            /// let's see it
+            res.redirect("/uploads/fullsize/" + imageName);
+
+          });
+        }
+    });
+});
+ */
+
+ /*
+router.post('/upload', upload.single('file'), function (req, res, next) {
+    var fileRows = [], fileHeader;
+  
+    // open uploaded file
+    csv.fromPath(req.file.path)
+      .on("data", function (data) {
+        fileRows.push(data); // push each row
+      })
+      .on("end", function () {
+        fs.unlinkSync(req.file.path);   // remove temp file
+        //process "fileRows"
+      }
+)});
+*/
+
 //Upload JSON data to database
 app.post("/upload", (request, response) => {
     var fs = require('fs');
@@ -186,7 +235,7 @@ app.post("/upload", (request, response) => {
         });
     });
 });
-*/
+
 
 
 //Gets the JSON file
