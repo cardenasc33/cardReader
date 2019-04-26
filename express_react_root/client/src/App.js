@@ -5,6 +5,7 @@ import PostList from './PostList'
 import Button from './Button';
 import Upload from './Upload';
 import FileUpload from './FileUpload';
+import CsvUpload from './CsvUpload';
 
 
 class App extends Component {
@@ -40,7 +41,7 @@ state = {
         </header>
         //Renders content from api calls
      
-        
+        <PostList/>
         <FileUpload/>
         
         
