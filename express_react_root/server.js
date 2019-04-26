@@ -10,7 +10,7 @@ var fs = require("fs");
 var axios = require("axios");
 var csv = require('fast-csv');
 
-var router = express.Router();
+//var router = express.Router();
 var upload = multer({dest: '/tmp/csv/'});
 
 
@@ -157,7 +157,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     });
 */
 
-/*
+
 //Uploading with express uploadfile
 app.post('/upload', function(req, res) {
     if (Object.keys(req.files).length == 0) {
@@ -171,8 +171,19 @@ app.post('/upload', function(req, res) {
 
     var jsonObj = JSON.parse(sampleFile.data.toString('ascii'));
   });
-*/
 
+  app.post('/csvUpload', function(req, res) {
+    
+    fs.createReadStream('myInputFile.csv')
+    .pipe(csv())
+    .on('data', function(data) {
+        console.log(data);
+    })
+    .on('end', function(data){
+        console.log('Read finished');
+    });
+    
+  });
 /*
 app.post('/upload', function(req, res) {
 
