@@ -3,9 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import PostList from './PostList'
 import Button from './Button';
-import Upload from './Upload';
-import FileUpload from './FileUpload';
-import CsvUpload from './CsvUpload';
+// import Upload from './Upload';
+import UploadFile from './UploadFile';
+// import CsvUpload from './CsvUpload';
 
 
 class App extends Component {
@@ -42,7 +42,7 @@ state = {
         //Renders content from api calls
      
         <PostList/>
-        <FileUpload/>
+        <UploadFile/>
         
         
         
